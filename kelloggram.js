@@ -22,15 +22,34 @@ firebase.auth().onAuthStateChanged(async function(user) {
       // Step 1:    POST fetch the create_post endpoint. Send the currently logged-in
       //            user's uid and username, and the image URL from the form in the
       //            POST request's body.
+      let reponse = await fetch(`http://localhost:8888/.netlify/functions/create_post`, {
+      method:`POST`,
+      body: JSON.stringify({
+        userId: user.uid,
+        imageUrl: postImageUrl,
+        username: postUsername
+      })
+    })
+    
       // Step 2-5:  Implement the lambda function in create_post.js
       // Step 6:    The lambda should return an Object of data with information on the
       //            the post, including the newly created post's id and likes. Use this
       //            JSON response object and pass the post's relevant values on to the
       //            renderPost() function below.
+      let json = await response.json()
+      console.log(json)
+      let postId = json.id
+      // let postImageUrl =json.imageUrl
+      // let postUsername = json.username
+      let numberOfLikes = json.likes
+
+
+      // console.log(JSON.parse(json))
       // Step 7:    (optional) Refactor renderPost() function to accept the entire post
       //            object instead of its individual attributes.
       // Challenge: Add functionality for users to comment on posts.
       // 🔥🔥🔥 End Lab
+     
       document.querySelector('#image-url').value = '' // clear the image url field
       renderPost(postId, postUsername, postImageUrl, numberOfLikes)
     })
