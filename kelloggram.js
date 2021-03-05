@@ -13,7 +13,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
       document.location.href = 'index.html'
     })
 
-    // Listen for the form submit and create/render the new post
+    // Listen for the form submit and create/render the new post 
     document.querySelector('form').addEventListener('submit', async function(event) {
       event.preventDefault()
       let postUsername = user.displayName
@@ -104,14 +104,27 @@ async function renderPost(postId, username, imageUrl, likes) {
     //            Send the post's id and the user's id along in the body of the request
     //            so that the backend can create the like for the correct post/user combination.
     //            Be sure to use `JSON.stringify()` for the body object.
+    let reponse = await fetch(`http://localhost:8888/.netlify/functions/like`, {
+      method:`POST`,
+      body: JSON.stringify({
+        postId: postId,
+        userId: currentUserId
+      })
+    })
+    console.log(response)
+    let json = await response.json()
+    console.log(json)
     // Step 2-5:  Implement the lambda function in like.js
     // Step 6:    Wrap the code below that visually increments the likes count in conditional logic
     //            so that it doesn't increment unless the backend added the like. Use either
     //            the response's body or the status code.
+
     // 🔥🔥🔥 End Code-Along
 
+    if (response.ok){
     let existingNumberOfLikes = document.querySelector(`.post-${postId} .likes`).innerHTML
     let newNumberOfLikes = parseInt(existingNumberOfLikes) + 1
     document.querySelector(`.post-${postId} .likes`).innerHTML = newNumberOfLikes
+    }
   })
 }
